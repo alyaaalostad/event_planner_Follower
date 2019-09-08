@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<header class="masthead text-center text-white">
+<header class="masthead  text-white">
   <div class="masthead-content">
     <div class="container">
         <div class="jumbotron">
-          <h2 class="masthead-subheading mb-0">Log In</h2>
-          <form action="{% url 'events:signin' %}" method="POST">
+          <h2 class="masthead-subheading mb-0 text-center">Create Event</h2>
+          <form action="{% url 'events:create-event' %}" method="POST">
             {% csrf_token %}
             {{form|crispy}}
-            <input class = "btn btn-primary btn-xl rounded-pill mt-5" type="submit" value="Login">
+            <input class = "btn btn-primary btn-xl rounded-pill mt-5" type="submit" value="Create!">
           </form>
       </div>
     </div>

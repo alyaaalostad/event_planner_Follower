@@ -6,11 +6,17 @@
     <div class="container">
       <h1 class="masthead-heading mb-0">All the events,</h1>
       <h2 class="masthead-subheading mb-0">You could ever want...</h2>
-      {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
-      {% else %}
-        <a href="#" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
-      {% endif %}
+      <form action="{% url 'events:home' %}" method="GET">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control text-muted" placeholder="Event Title/Description/Organizer..." name="q" value="{{request.GET.q}}">
+        <div class="input-group-append">
+          <button class="btn btn-warning" type="submit">Search</button>
+        </div>
+        </div>
+      </form>
+  </div>
+</div>
+        <a href="{% url 'events:event-list' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Explore All Events</a>
     </div>
   </div>
   <div class="bg-circle-1 bg-circle"></div>

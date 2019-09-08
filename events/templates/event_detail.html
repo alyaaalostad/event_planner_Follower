@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead text-white">
+  <div class="masthead-content">
+    <div class="container">
+      <h6 class="masthead-heading mb-0">Event Title: {{event.title}}</h6>
+      <h5 class=" mb-0">Description: {{event.description}}</h5>
+      <h6 class=" mb-0">Seats: {{event.seats}}</h6>
+      <h6 class=" mb-0">Event Location: {{event.location}}</h6>
+      <h6 class=" mb-0">Event Date/Time: {{event.date}} | {{event.time}}</h6>
+        <a href="{% url 'events:update-event' event.id %}" class="btn btn-warning btn-m rounded-pill mt-5">Edit</a>
+        <a href="{% url 'events:delete-event' event.id %}" class="btn btn-outline-warning btn-m rounded-pill mt-5">Delete Event</a>
+    </div>
+  </div>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
+
+
+
+{% endblock %}

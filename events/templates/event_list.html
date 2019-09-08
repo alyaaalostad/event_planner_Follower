@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead text-black">
+  <div class="masthead-content">
+
+    <div class="container">
+      {% for event in events %}
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="..." class="card-img" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{event.title}}</h5>
+              <p class="card-text">{{event.location}}</p>
+              <p class="card-text"><small class="text-muted">{{event.time}} - {{event.date}}</small></p>
+              <p><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">Book Now!</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+        {% endfor %}
+    </div>
+  </div>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
+
+
+
+{% endblock %}
