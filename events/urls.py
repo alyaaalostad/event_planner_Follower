@@ -1,5 +1,6 @@
 from django.urls import path
 from events import views
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 app_name = 'events'

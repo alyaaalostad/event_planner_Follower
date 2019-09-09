@@ -1,0 +1,73 @@
+from django.shortcuts import render
+from events.models import Event, UserEvent
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView
+from api.serializers import (UpcomingListSerializer, OrganizerListSerializer, EventAttendeesSerializer,
+ BookingListSerializer, UserCreateSerializer,)
+
+from datetime import date
+from django.utils import timezone
+from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAuthenticated 
+from .permissions import IsAttendee, IsOwner
+
+
+
+class UpcomingList(ListAPIView):
+	serializer_class = UpcomingListSerializer
+
+	def get_queryset(self):
+			query= Event.objects.filter(date__gt=date.today())
+			return query
+
+class OrganizerList(ListAPIView):
+	serializer_class = OrganizerListSerializer
+	queryset= Event.objects.all()
+	filter_backend=[SearchFilter,]
+	search_fields=['organizer']
+
+class UserList(ListAPIView):
+	serializer_class = BookingListSerializer
+	permission_classes = [IsAuthenticated, IsAttendee]
+
+	def get_queryset(self):
+			query = UserEvent.objects.filter(name=self.request.user)
+			return query
+
+
+class UserCreateAPIView(CreateAPIView):
+	serializer_class = UserCreateSerializer
+
+class CreateView(CreateAPIView):
+	serializer_class = UpcomingListSerializer
+	permission_classes = [IsAuthenticated,]
+
+class UpdateView(RetrieveUpdateAPIView):
+	queryset = Event.objects.all()
+	serializer_class = UpcomingListSerializer
+	permission_classes = [IsAuthenticated, IsOwner]
+	lookup_field = 'id'
+	lookup_url_kwarg = 'event_id'
+
+class BookView(CreateAPIView):
+	serializer_class = BookingListSerializer
+	permission_classes = [IsAuthenticated,]
+
+	def perform_create(self,serializer):
+		serializer.save(name=self.request.user, event_id=self.kwargs['event_id'])
+
+	
+class AttendeesView(RetrieveAPIView):
+	serializer_class = EventAttendeesSerializer
+	permission_classes = [IsAuthenticated, IsOwner]
+	lookup_field = 'id'
+	lookup_url_kwarg = 'event_id'
+	queryset=Event.objects.all()
+
+
+
+
+
+
+
+
+

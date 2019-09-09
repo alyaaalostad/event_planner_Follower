@@ -6,11 +6,41 @@
     <div class="container">
       <h6 class="masthead-heading mb-0">Event Title: {{event.title}}</h6>
       <h5 class=" mb-0">Description: {{event.description}}</h5>
-      <h6 class=" mb-0">Seats: {{event.seats}}</h6>
+      <h6 class=" mb-0">Capacity: {{event.capacity}}</h6>
+      <h6 class=" mb-0">Seats Left: {{event.seats_left}}</h6>
       <h6 class=" mb-0">Event Location: {{event.location}}</h6>
       <h6 class=" mb-0">Event Date/Time: {{event.date}} | {{event.time}}</h6>
-        <a href="{% url 'events:update-event' event.id %}" class="btn btn-warning btn-m rounded-pill mt-5">Edit</a>
-        <a href="{% url 'events:delete-event' event.id %}" class="btn btn-outline-warning btn-m rounded-pill mt-5">Delete Event</a>
+      {% if request.user == event.organizer%}
+          <a href="{% url 'events:update-event' event.id %}" class="btn btn-warning btn-m rounded-pill mt-5">Edit</a>
+          <a href="{% url 'events:delete-event' event.id %}" class="btn btn-outline-warning btn-m rounded-pill mt-5">Delete Event</a>
+
+             <br>      
+             <br> 
+          <table class="table table-striped table-light">
+            <thead>
+              <tr>
+                <th scope="col">Attendees</th>
+                <th scope="col">Seats Booked</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for info in event.bookings.all %}
+              <tr>
+                <th scope="row">{{info.name}}</th>
+                <td>{{info.seats}}</td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+          {%else%}
+          {% if event.seats_left == 0  %}
+              <p class="btn btn-secondary" style="background-color: red color: white" disabled> Fully Booked</p>
+              {% else %}
+              <p><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">Book Now!</a></p>
+              {% endif %}
+          {%endif%}
+
+
     </div>
   </div>
   <div class="bg-circle-1 bg-circle"></div>

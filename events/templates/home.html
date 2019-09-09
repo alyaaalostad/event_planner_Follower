@@ -6,14 +6,14 @@
     <div class="container">
       <h1 class="masthead-heading mb-0">All the events,</h1>
       <h2 class="masthead-subheading mb-0">You could ever want...</h2>
-      <form action="{% url 'events:home' %}" method="GET">
+      <form action="{% url 'events:event-list' %}" method="GET">
       <div class="input-group mb-3">
-        <input type="text" class="form-control text-muted" placeholder="Event Title/Description/Organizer..." name="q" value="{{request.GET.q}}">
+        <input type="text" class="form-control text-muted" placeholder="Event Title - Description - Organizer..." name="q" value="{{request.GET.q}}">
         <div class="input-group-append">
           <button class="btn btn-warning" type="submit">Search</button>
         </div>
         </div>
-      </form>
+       </form>
   </div>
 </div>
         <a href="{% url 'events:event-list' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Explore All Events</a>

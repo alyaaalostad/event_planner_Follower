@@ -16,7 +16,12 @@
               <h5 class="card-title">{{event.title}}</h5>
               <p class="card-text">{{event.location}}</p>
               <p class="card-text"><small class="text-muted">{{event.time}} - {{event.date}}</small></p>
+              {% if event.seats_left == 0  %}
+              <p class="btn btn-muted" style="color: red" disabled> Fully Booked</p>
+              {% else %}
               <p><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">Book Now!</a></p>
+              {% endif %}
+             <a href="{% url 'events:event-detail' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">View Details</a>
             </div>
           </div>
         </div>
