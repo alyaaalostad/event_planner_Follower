@@ -4,11 +4,11 @@
 <header class="masthead text-center text-white">
   <div class="masthead-content">
     <div class="container">
-      <h1 class="masthead-heading mb-0">All the events,</h1>
-      <h2 class="masthead-subheading mb-0">You could ever want...</h2>
+      <h1 class="masthead-heading mb-0">The all <span style="font-family: Lato"> UNTITLED. </span>events,</h1>
+      <h2 class="masthead-subheading mb-5">You could never want...</h2>
       <form action="{% url 'events:event-list' %}" method="GET">
       <div class="input-group mb-3">
-        <input type="text" class="form-control text-muted" placeholder="Event Title - Description - Organizer..." name="q" value="{{request.GET.q}}">
+        <input type="text" class="form-control text-muted btn-lg" placeholder="Search for title, description, or organizer..." name="q" value="{{request.GET.q}}">
         <div class="input-group-append">
           <button class="btn btn-warning" type="submit">Search</button>
         </div>

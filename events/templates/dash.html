@@ -4,8 +4,9 @@
 <header class="masthead text-center text-white">
   <div class="masthead-content">
     <div class="container">
-      <a href="{% url 'events:create-event' %}" class="btn btn-success btn-m mx-5 rounded-pill mb-3">Create</a>
+      
       <h4 class="masthead-heading">Dashboard</h4>
+      <a href="{% url 'events:create-event' %}" class="btn btn-primary btn-block btn-lg rounded-pill mt-5 mb-5">Create</a>
       {% if events|length > 0 %}
           <table class="table table-dark table-hover">
          <thead>
@@ -27,33 +28,46 @@
           </tr>
           {% endfor %}
         </tbody>
+        {% endif %}
       </table>
       <br>
-      <table class="table table-light table-hover">
-  <thead>
-          <h3 style="color: black">Events Attended</h3>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for event in request.user.attended.all %}
-    <tr>
-      <th scope="row">{{event.event.title}}</th>
-      <td>{{event.event.date}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      {% if request.user.attended.all|length > 0 %}
+        <h3 style="color: black">Booked Events</h3>
+        <table class="table table-light table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Date</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for event in future %}
+        <tr>
+        <th scope="row">{{event.event.title}}</th>
+        <td>{{event.event.date}}</td>
+          <td style="color: green">Booked!</td>
+      </tr>
+      {% endfor %}
+      {% for event in past %}
+        <tr>
+        <th scope="row">{{event.event.title}}</th>
+        <td>{{event.event.date}}</td>
+        <td style="color: red">Attended</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+   {% endif %}
 </div>
+
   </div>
   <div class="bg-circle-1 bg-circle"></div>
   <div class="bg-circle-2 bg-circle"></div>
   <div class="bg-circle-3 bg-circle"></div>
   <div class="bg-circle-4 bg-circle"></div>
 </header>
-      {% endif %}
+     
 
 
 

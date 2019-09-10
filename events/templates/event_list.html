@@ -6,22 +6,23 @@
 
     <div class="container">
       {% for event in events %}
-      <div class="card mb-3" style="max-width: 540px;">
+      <div class="card mb-3 bg-gray text-white" style="max-width: 100%;">
         <div class="row no-gutters">
-          <div class="col-md-4">
-            <img src="..." class="card-img" alt="...">
+          <div class="  col-md-4 ">
+            <img src="{{event.event_image.url}}" class="image_style" alt="...">
           </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{event.title}}</h5>
-              <p class="card-text">{{event.location}}</p>
-              <p class="card-text"><small class="text-muted">{{event.time}} - {{event.date}}</small></p>
+          <div class="col-md-8 ">
+            <div class="card-body text-center my-3">
+              <h1 class="eventlist card-title listblock">{{event.title}}</h1>
+              <h4 class=" event_title card-text listblock">{{event.location}}</h4>
+              <h4 class="card-text"><small class="text-light listblock">{{event.time}} - {{event.date}}</small></h4>
+              <br>
               {% if event.seats_left == 0  %}
-              <p class="btn btn-muted" style="color: red" disabled> Fully Booked</p>
+              <h4 class=" event_title btn btn-danger block btn-lg disabled" >FULL</h4>
               {% else %}
-              <p><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">Book Now!</a></p>
+              <h4><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary block btn-lg" style="background-color: yellow color: white">Book Now!</a></h4>
               {% endif %}
-             <a href="{% url 'events:event-detail' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">View Details</a>
+             <h4><a href="{% url 'events:event-detail' event.id %}" class="btn btn-outline-secondary block btn-lg" style="background-color: yellow color: white">View Details</a></h4>
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ def create_event(request):
 		return redirect('events:signin')
 	form = EventForm()
 	if request.method == "POST":
-		form = EventForm(request.POST)
+		form = EventForm(request.POST, request.FILES or None)
 		if form.is_valid():
 			event = form.save(commit=False)
 			event.organizer = request.user
@@ -52,8 +52,14 @@ def dashboard(request):
 		return redirect('events:signin')
 	
 	events=request.user.events.all()
+	past_events=request.user.attended.filter(event__date__lt=date.today())
+	future_events=request.user.attended.filter(event__date__gte=date.today())
 	context={
-		'events':events
+
+		'events':events,
+		'past':past_events,
+		'future':future_events,
+	
 	}
 	return render(request,'dash.html',context)
 
@@ -72,7 +78,7 @@ def event_update(request, event_id):
 		return redirect('events:home')
 	form = EventForm(instance=event)
 	if request.method == "POST":
-		form = EventForm(request.POST,instance=event)
+		form = EventForm(request.POST,request.FILES, instance=event)
 		if form.is_valid():
 			form.save()
 			messages.success(request, "Successfully Edited!")

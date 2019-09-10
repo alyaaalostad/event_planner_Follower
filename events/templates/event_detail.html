@@ -4,15 +4,18 @@
 <header class="masthead text-white">
   <div class="masthead-content">
     <div class="container">
-      <h6 class="masthead-heading mb-0">Event Title: {{event.title}}</h6>
-      <h5 class=" mb-0">Description: {{event.description}}</h5>
-      <h6 class=" mb-0">Capacity: {{event.capacity}}</h6>
-      <h6 class=" mb-0">Seats Left: {{event.seats_left}}</h6>
-      <h6 class=" mb-0">Event Location: {{event.location}}</h6>
-      <h6 class=" mb-0">Event Date/Time: {{event.date}} | {{event.time}}</h6>
+      <h6 class="masthead-heading mb-5">{{event.title}}</h6>
+      <h3 class=" event mb-0">Description: <span style="color: black"><b>{{event.description}}</b></span></h3>
+      <h3 class=" event mb-0">Capacity: <span style="color: black "><b>{{event.capacity}}</span></b></h3>
+      <h3 class="  event mb-0">Seats Left:<span style="color: black "><b>{{event.seats_left}}</span></b></h3>
+      <h3 class=" event mb-0">Event Location:<span style="color: black "><b>{{event.location}}</span></b></h3>
+      <h3 class="  event mb-0">Event Date/Time: <span style="color: black "><b>{{event.date}} <span style="color: white">|</span> {{event.time}}</span></b></h3>
+      <div class=" img col-md-4 ">
+            <img src="{{event.event_image.url}}" class="image_style" alt="...">
+          </div>
       {% if request.user == event.organizer%}
-          <a href="{% url 'events:update-event' event.id %}" class="btn btn-warning btn-m rounded-pill mt-5">Edit</a>
-          <a href="{% url 'events:delete-event' event.id %}" class="btn btn-outline-warning btn-m rounded-pill mt-5">Delete Event</a>
+          <h3><a href="{% url 'events:update-event' event.id %}" class="btn btn-warning btn-xl rounded-pill mt-5">Edit</a>
+          <a href="{% url 'events:delete-event' event.id %}" class="btn btn-outline-dark btn-xl rounded-pill mt-5">Delete Event</a></h3>
 
              <br>      
              <br> 
@@ -34,9 +37,9 @@
           </table>
           {%else%}
           {% if event.seats_left == 0  %}
-              <p class="btn btn-secondary" style="background-color: red color: white" disabled> Fully Booked</p>
+              <h3 class=" xox btn btn-danger btn-xl rounded-pill mt-5" style="background-color: yellow color: white">Fully Booked</h3>
               {% else %}
-              <p><a href="{% url 'events:event-book' event.id %}" class="btn btn-secondary" style="background-color: yellow color: white">Book Now!</a></p>
+              <h3><a href="{% url 'events:event-book' event.id %}" class="xox btn btn-secondary btn-xl rounded-pill mt-5" style="background-color: yellow color: white">Book Now!</a></h3>
               {% endif %}
           {%endif%}
 

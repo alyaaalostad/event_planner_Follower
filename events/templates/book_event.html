@@ -9,7 +9,7 @@
           <form action="{% url 'events:event-book' event.id %}" method="POST">
             {% csrf_token %}
             {{form|crispy}}
-            <input class = "btn btn-primary btn-xl rounded-pill mt-5" type="submit" value="Book">
+            <input class = "btn btn-outline-primary btn-block btn-lg rounded-pill mt-5" type="submit" value="Book">
           </form>
           
       </div>

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Event(models.Model):
 	title=models.CharField(max_length=100)
+	event_image=models.ImageField(null=True, blank=True)
 	description=models.TextField()
 	location=models.CharField(max_length=100)
 	date=models.DateField()
