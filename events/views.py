@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views import View
 from .forms import UserSignup, UserLogin, EventForm, UserForm, ProfileUpdate, ProfileUser
 from django.contrib import messages
-from .models import Event, UserEvent, Profile
+from .models import Event, UserEvent, Profile, Contact
 from datetime import date
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -11,8 +11,37 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
 @login_required
-def profile(request):
-	return render(request, 'profile.html')
+def profile(request, user_id):
+	profile= Profile.objects.get(user_id=user_id)
+	user= User.objects.get(id=user_id)
+	events= Event.objects.filter(organizer=user)
+
+	def check_follow():
+
+		
+
+		if request.user in Contact.objects.filter(following=user):
+			return True
+		else: False
+
+	if request.POST.get('follow'):
+		try:
+			obj = Contact.objects.get(following=user, follower=request.user)
+		except Contact.DoesNotExist:
+			Contact.objects.create(following=user,follower=request.user)
+	elif request.POST.get('unfollow'):
+		try:
+			obj = Contact.objects.get(following=user, follower=request.user)
+		except Contact.DoesNotExist:
+			Contact.objects.get(following=user,follower=request.user).delete()
+
+	context = {
+
+		'profile':profile,
+		'events':events,
+		'followers_of_user':check_follow(),
+	}
+	return render(request, 'profile.html', context)
 
 
 def home(request):
@@ -169,7 +198,8 @@ def event_book(request, event_id):
 				user_event.save()
 				send_mail(
 					'[NO-REPLY]: UNTITLED. Booking Confirmation',
-					"""This is a automated email to confirm your booking, please do not reply.
+					"""
+					This is a automated email to confirm your booking, please do not reply.
 
 					Review the below information:
 					

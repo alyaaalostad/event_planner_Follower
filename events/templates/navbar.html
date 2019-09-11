@@ -18,7 +18,7 @@
 				</li>
 				{% else %}
 				<li class="nav-item">
-					<a class="nav-link active" href='{%url "events:profile" %}'>{{ request.user }}</a>
+					<a class="nav-link active" href='{%url "events:profile" user.id %}'>{{ request.user }}</a>
 				</li>
 					<li class="nav-item">
 					<a class="nav-link" href="{% url 'events:dashboard' %}">Dashboard</a>

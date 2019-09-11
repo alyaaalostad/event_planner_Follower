@@ -8,10 +8,10 @@
         <div class="jumbotron">
           <div class="row text-white justify-content-center">
             <div class="col-6">
-                    <h2 >{{user.first_name}} {{user.last_name}}</h2>
-                    <p><strong>Username: </strong> {{user.username}}</p>
-                    <p><strong>Email: </strong> {{user.email}}</p>          
-                    <img src="{{user.profile.image.url}}" alt="" class="img-circle img-responsive">
+                    <h2 >{{profile.user.first_name}} {{profile.user.last_name}}</h2>
+                    <p><strong>Username: </strong> {{profile.user.username}}</p>
+                    <p><strong>Email: </strong> {{profile.user.email}}</p>          
+                    <img src="{{profile.user.profile.image.url}}" alt="" class="img-circle img-responsive">
                     <div class="row">
                       <div class="col-6">
                         <h2><strong>245</strong></h2>                    
@@ -24,7 +24,25 @@
                     </div>
                     <div class="row">
                   <div class="col-6">
-                    <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>
+                    {% if followers_of_user == True %}
+                      <form action="{% url 'events:profile'  profile.user.id %}" method="POST">
+                              <div class="form-row">
+                               {% csrf_token %}
+                                 <div class="col-12 m-2">
+                                   <input class="btn btn-success btn-block" type="submit" value="Unfollow" name="unfollow">
+                                 </div>
+                             </div>
+                             </form>
+                    {% else %}
+                    <form action="{% url 'events:profile' profile.user.id %}" method="POST">
+                              <div class="form-row">
+                               {% csrf_token %}
+                                 <div class="col-12 m-2">
+                                   <input class="btn btn-success btn-block" type="submit" value="Follow" name="follow">
+                                 </div>
+                             </div>
+                            </form>
+                    {% endif %}
                   </div>
                   <div class="col-6">
                     <a href= "{% url 'events:update-profile' %}" ><button class="btn btn-info btn-block mt-4"><span class="fa fa-user"></span> Edit</button></a>

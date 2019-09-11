@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from PIL import Image
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 class Event(models.Model):
 	title=models.CharField(max_length=100)
@@ -60,5 +61,17 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
 	instance.profile.save()
 
+
+class Contact(models.Model):
+	following= models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+	follower= models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+	created= models.DateTimeField(auto_now_add=True, db_index=True)
+
+	class Meta:
+		ordering=('-created',)
+
+	def __str__(self):
+		return '{} follows {}'.format(self.follower, self.following)
+ 
 
 
