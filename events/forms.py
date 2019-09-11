@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Event, UserEvent
+from .models import Event, UserEvent, Profile
 
 class UserSignup(forms.ModelForm):
 	class Meta:
@@ -29,7 +29,17 @@ class EventForm(forms.ModelForm):
 			'date': forms.DateInput(attrs={'type':'date'}),
 			'time': forms.TimeInput(attrs={'type':'time'})
 		}
-		
+class ProfileUpdate(forms.ModelForm):
+	class Meta:
+		model= Profile
+		exclude=['user']
+
+class ProfileUser(forms.ModelForm):
+	class Meta:
+		model= User
+		fields= ['username', 'first_name', "last_name", 'email']
+
+
 
 class UserForm(forms.ModelForm):
 	class Meta:

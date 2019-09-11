@@ -3,7 +3,7 @@ from events.models import Event, UserEvent
 from django.contrib.auth.models import User
 
 
-class UpcomingListSerializer(serializers.ModelSerializer):
+class DisplayEventListSerializer(serializers.ModelSerializer):
 	capacity = serializers.SerializerMethodField()
 	class Meta:
 		model= Event
@@ -15,6 +15,11 @@ class UpcomingListSerializer(serializers.ModelSerializer):
 			print(x)
 			total += x.seats
 		return obj.capacity - total
+
+class CreateEventSerializer(serializers.ModelSerializer):
+	class Meta:
+		model= Event
+		exclude=['organizer']
 
 
 
@@ -36,25 +41,27 @@ class UserSerializer(serializers.ModelSerializer):
 		fields=['first_name', 'last_name',]
 
 class OrganizerListSerializer(serializers.ModelSerializer):
-	user_name = serializers.SerializerMethodField()
+	organizer_name = serializers.SerializerMethodField()
 
 	class Meta:
 		model= Event
-		fields="__all__"
+		fields=['organizer_name','title', 'date','time','location', 'capacity', 'event_image']
 
-	def get_user_name(self, obj):
+	def get_organizer_name(self, obj):
 		return (obj.organizer.first_name+" "+obj.organizer.last_name)
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
-        model = User
-        fields = ['username', 'password']
+        model = User 
+        fields = ['first_name', 'last_name', 'username', 'password',]
 
     def create(self, validated_data):
         username = validated_data['username']
         password = validated_data['password']
-        new_user = User(username=username)
+        firstname = validated_data['first_name']
+        lastname = validated_data['last_name']
+        new_user = User(username=username, first_name=firstname, last_name=lastname)
         new_user.set_password(password)
         new_user.save()
         return validated_data

@@ -1,10 +1,13 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from PIL import Image
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Event(models.Model):
 	title=models.CharField(max_length=100)
-	event_image=models.ImageField(null=True, blank=True)
+	image=models.ImageField(null=True, blank=True)	# image
 	description=models.TextField()
 	location=models.CharField(max_length=100)
 	date=models.DateField()
@@ -28,10 +31,34 @@ class Event(models.Model):
 
 
 class UserEvent(models.Model):
-	name=models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='attended')
+	name=models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='attended')	#naming
 	seats=models.PositiveIntegerField()
 	event=models.ForeignKey(Event, default=1, on_delete=models.CASCADE, related_name='bookings')
 
+
 	def __str__(self):
 		return "%s - %s" % (self.name, self.event.title)
+
+class Profile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+	image = models.ImageField(default='default.jpg')
+
+	def __str__(self):
+		return '%s profile'% (self.user.username)
+
+
+
+
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+	instance.profile.save()
+
+
 

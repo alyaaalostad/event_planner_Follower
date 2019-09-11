@@ -1,14 +1,48 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin, EventForm, UserForm
+from .forms import UserSignup, UserLogin, EventForm, UserForm, ProfileUpdate, ProfileUser
 from django.contrib import messages
-from .models import Event, UserEvent
+from .models import Event, UserEvent, Profile
 from datetime import date
+from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+
+@login_required
+def profile(request):
+	return render(request, 'profile.html')
+
 
 def home(request):
 	return render(request, 'home.html')
+
+def UpdateProfile(request):		# update_profile, ~profile_id~
+	# redundant
+	
+	if request.user.is_anonymous :
+		messages.warning(request, "You need to sign in first")
+		return redirect('events:signin')
+
+	profile=Profile.objects.get(user=request.user)
+	form= ProfileUpdate(instance=profile)
+	form2= ProfileUser(instance=request.user)
+	if request.method == "POST":
+		form = ProfileUpdate(request.POST,request.FILES, instance=profile)
+		form2= ProfileUser(request.POST, instance=request.user)
+		if form.is_valid() and form2.is_valid():
+			form.save()
+			form2.save()
+			messages.success(request, "Successfully Edited!")
+			return redirect('events:profile')
+	context = {
+	"form": form,
+	"profile": profile,
+	"form2": form2,
+	}
+	return render(request, 'profile_update.html', context)
+
 
 
 def event_list(request):
@@ -74,7 +108,7 @@ def event_detail(request, event_id):
 def event_update(request, event_id):
 	event = Event.objects.get(id=event_id)
 	if (request.user.is_anonymous) or (request.user != event.organizer):
-		messages.warning(request, "You need to sign in first")
+		messages.warning(request, "You need to sign in first")		# add new message
 		return redirect('events:home')
 	form = EventForm(instance=event)
 	if request.method == "POST":
@@ -93,7 +127,7 @@ def event_update(request, event_id):
 def event_delete(request, event_id):
 	event=Event.objects.get(id=event_id)
 	if (request.user.is_anonymous) or (request.user != event.organizer):
-		messages.warning(request, "You need to sign in first")
+		messages.warning(request, "You need to sign in first")		# add new message
 		return redirect('events:home')
 	event.delete()
 	messages.success(request, "Successfully Deleted!")
@@ -133,6 +167,26 @@ def event_book(request, event_id):
 			user_event.name = request.user
 			if user_event.seats <= event.seats_left():
 				user_event.save()
+				send_mail(
+					'[NO-REPLY]: UNTITLED. Booking Confirmation',
+					"""This is a automated email to confirm your booking, please do not reply.
+
+					Review the below information:
+					
+					Event Title: %s
+					Date: %s
+					Time: %s
+					Seats Reserved: %s seats
+
+
+					Best UNTITLED. regards,
+
+					© UNTITLED. Event Agency 2020
+					""" % (event.title, event.date, event.time, user_event.seats),
+					'untitled.events.2020@gmail.com',
+					[request.user.email],
+					fail_silently=False,
+					)
 				messages.success(request, "Your seats are booked!")
 			else:
 				messages.success(request, "requested seats exceeded the available capacity!")
@@ -177,4 +231,6 @@ class Logout(View):
 		logout(request)
 		messages.success(request, "You have successfully logged out.")
 		return redirect("events:home")
+
+
 

@@ -5,13 +5,15 @@
   <div class="masthead-content">
     <div class="container">
         <div class="jumbotron">
-          <h2 class="masthead-subheading mb-0 text-center">Book for <span style='color:#D8BFD8'>{{event.title}}</span></h2>
-          <form action="{% url 'events:event-book' event.id %}" method="POST">
+          <h2 class="masthead-subheading mb-0 text-center">Update Profile</h2>
+          <form action="{% url 'events:update-profile' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            {{form2|crispy}}
             {{form|crispy}}
-            <input class = "btn btn-outline-primary btn-block btn-lg rounded-pill mt-5" type="submit" value="Book">
+
+            <input class = "btn btn-warning btn-xl rounded-pill mt-5" type="submit" value="Update">
           </form>
-          
       </div>
     </div>
   </div>

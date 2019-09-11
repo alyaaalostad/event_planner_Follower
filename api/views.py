@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from events.models import Event, UserEvent
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView
-from api.serializers import (UpcomingListSerializer, OrganizerListSerializer, EventAttendeesSerializer,
- BookingListSerializer, UserCreateSerializer,)
+from api.serializers import (CreateEventSerializer, OrganizerListSerializer, EventAttendeesSerializer,
+ BookingListSerializer, UserCreateSerializer, DisplayEventListSerializer)
 
 from datetime import date
 from django.utils import timezone
@@ -13,37 +13,37 @@ from .permissions import IsAttendee, IsOwner
 
 
 class UpcomingList(ListAPIView):
-	serializer_class = UpcomingListSerializer
+	serializer_class = DisplayEventListSerializer
 
 	def get_queryset(self):
-			query= Event.objects.filter(date__gt=date.today())
-			return query
+		query= Event.objects.filter(date__gt=date.today())
+		return query
 
 class OrganizerList(ListAPIView):
 	serializer_class = OrganizerListSerializer
 	queryset= Event.objects.all()
-	filter_backend=[SearchFilter,]
-	search_fields=['organizer']
+	filter_backends=[SearchFilter,]
+	search_fields=['organizer__first_name','organizer__last_name']
 
 class UserList(ListAPIView):
 	serializer_class = BookingListSerializer
 	permission_classes = [IsAuthenticated, IsAttendee]
 
 	def get_queryset(self):
-			query = UserEvent.objects.filter(name=self.request.user)
-			return query
+		query = UserEvent.objects.filter(name=self.request.user)
+		return query
 
 
 class UserCreateAPIView(CreateAPIView):
 	serializer_class = UserCreateSerializer
 
 class CreateView(CreateAPIView):
-	serializer_class = UpcomingListSerializer
+	serializer_class = CreateEventSerializer
 	permission_classes = [IsAuthenticated,]
 
 class UpdateView(RetrieveUpdateAPIView):
 	queryset = Event.objects.all()
-	serializer_class = UpcomingListSerializer
+	serializer_class = DisplayEventListSerializer
 	permission_classes = [IsAuthenticated, IsOwner]
 	lookup_field = 'id'
 	lookup_url_kwarg = 'event_id'
